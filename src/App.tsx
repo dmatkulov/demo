@@ -1,8 +1,9 @@
-import Person from "./Person/Person";
+import Person from './Person/Person';
 import './App.css';
-import {useState} from "react";
+import React, {useState} from 'react';
 
 interface Person {
+  id: number;
   name: string;
   age: number;
   hobby: string;
@@ -10,30 +11,69 @@ interface Person {
 
 function App() {
   const [people, setPeople] = useState<Person[]>([
-    {name: 'Jane', age: 28, hobby: 'Video games'},
-    {name: 'John', age: 30, hobby: 'Knitting'},
+    {name: 'Jane', age: 28, hobby: 'Video games', id: 1},
+    {name: 'John', age: 30, hobby: 'Knitting', id: 2},
+    {name: 'Jack', age: 69, hobby: 'Collects post stamps', id: 3},
+    {name: 'Dilshad', age: 34, hobby: 'Always down', id: 4},
   ]);
 
-  const changeName = () => {
-    setPeople([
-      {name: 'Jane Doe', age: 28, hobby: 'Video games'},
-      {name: 'John Doe', age: 30, hobby: 'Knitting'},
-    ]);
+  const [showPeople, setShowPeople] = useState(true);
+  const changeName = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
+    const peopleCopy = [...people];
+    const person = peopleCopy[index];
+    const personCopy = {...person};
+    personCopy.name = event.target.value;
+    peopleCopy[index] = personCopy;
+
+    setPeople(peopleCopy);
   };
+  const changeAge = () => {
+    const peopleCopy = people.map(person => {
+      return {...person, age: person.age + 1};
+    });
+
+    setPeople(peopleCopy);
+  };
+  const increaseAge = (index: number) => {
+    const peopleCopy = [...people];
+
+    const person = peopleCopy[index];
+    const personCopy = {...person};
+    personCopy.age++;
+    peopleCopy[index] = personCopy;
+    setPeople(peopleCopy);
+    console.log('clicked' + index);
+  };
+  const togglePeople = () => {
+    setShowPeople((prevState) => !prevState);
+  };
+
+  let peopleList: React.ReactNode = null;
+
+  if (showPeople) {
+    peopleList = people.map((person, index) => {
+      return (
+        <Person
+          key={person.id}
+          name={person.name}
+          age={person.age}
+          onNameClick={() => increaseAge(index)}
+          onNameChange={(event) => changeName(event, index)}
+        >
+          <strong>Hobby: </strong>{person.hobby}
+        </Person>
+      );
+    });
+  }
 
   return (
     <div className="App">
-      <Person name={people[0].name} age={people[0].age}>
-        <strong>Hobby: </strong>{people[0].hobby}
-      </Person>
-      <Person name={people[1].name} age={people[1].age}>
-        <strong>Hobby: </strong>{people[1].hobby}
-      </Person>
+      {peopleList}
       <div>
-        <button onClick={changeName}>Change name</button>
+        <button onClick={changeAge}>Change age</button>
+        <button onClick={togglePeople}>Toggle people</button>
       </div>
     </div>
-  )
+  );
 }
-
-export default App
+export default App;
