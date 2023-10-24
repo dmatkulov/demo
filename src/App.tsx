@@ -13,18 +13,16 @@ function App() {
   const [people, setPeople] = useState<Person[]>([
     {name: 'Jane', age: 28, hobby: 'Video games', id: 1},
     {name: 'John', age: 30, hobby: 'Knitting', id: 2},
-    {name: 'Jack', age: 69, hobby: 'Collects post stamps', id: 3},
-    {name: 'Dilshad', age: 34, hobby: 'Always down', id: 4},
+    {name: 'Jack', age: 30, hobby: 'Knitting', id: 3},
+    {name: 'Jim', age: 30, hobby: 'Knitting',id: 4},
   ]);
 
   const [showPeople, setShowPeople] = useState(true);
   const changeName = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
     const peopleCopy = [...people];
-    const person = peopleCopy[index];
-    const personCopy = {...person};
+    const personCopy = {...peopleCopy[index]};
     personCopy.name = event.target.value;
     peopleCopy[index] = personCopy;
-
     setPeople(peopleCopy);
   };
   const changeAge = () => {
@@ -32,18 +30,18 @@ function App() {
       return {...person, age: person.age + 1};
     });
 
+    console.log(peopleCopy);
     setPeople(peopleCopy);
   };
   const increaseAge = (index: number) => {
+    console.log('clicked!', index);
     const peopleCopy = [...people];
-
-    const person = peopleCopy[index];
-    const personCopy = {...person};
+    const personCopy = {...peopleCopy[index]};
     personCopy.age++;
     peopleCopy[index] = personCopy;
     setPeople(peopleCopy);
-    console.log('clicked' + index);
   };
+
   const togglePeople = () => {
     setShowPeople((prevState) => !prevState);
   };
@@ -76,4 +74,5 @@ function App() {
     </div>
   );
 }
+
 export default App;
